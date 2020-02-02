@@ -59,8 +59,3 @@ def get_root():
         raise Exception('Incorrect data structure, no  one roots in the tree')
     else:
         return roots.first()
-
-
-
-
-
