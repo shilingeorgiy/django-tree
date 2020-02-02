@@ -21,6 +21,7 @@ def tree_by_node_id(request, node_id):
 
 
 def get_tree_by_id(node_id):
+    """Check and return model item"""
     try:
         root_row = Tree.objects.get(id=node_id)
     except Tree.DoesNotExist:
@@ -30,11 +31,13 @@ def get_tree_by_id(node_id):
 
 
 def get_full_tree():
+    """Get all tree from root"""
     root = get_root()
     return get_child(root)
 
 
 def get_child(parent):
+    """Get parent subtree or node"""
     children = Tree.objects.filter(parent=parent)
     if children.count() == 0:
         return {'name': parent.name, 'children': []}
@@ -47,6 +50,7 @@ def get_child(parent):
 
 
 def get_root():
+    """Validate data structure and get root element"""
     roots = Tree.objects.filter(parent=None)  # request all roots to verify the correctness of the structure.
     roots_count = roots.count()
     if roots_count > 1:
