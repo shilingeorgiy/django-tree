@@ -7,9 +7,13 @@ Package for install (Ubuntu 18.x) _build-essential, python3.7-venv, python3.7-de
 
 
 1. Create virtualenv:
-python3.7 -m venv .env```
+```
+python3.7 -m venv .env
+```
 2. Set virtualenv
-``` . ./.env/bin/activate```
+``` 
+. ./.env/bin/activate
+```
 3. Install requirements:
 ```
 pip install --upgrade pip
@@ -34,4 +38,4 @@ pip install -r requirements.txt
 
 ### http://127.0.0.1:8000/ - Get full tree ###
 ### http://127.0.0.1:8000/ - Get subtree by node id ###
-### Code and main logic in   ###
+### Code and main logic in tree/views.py ###
