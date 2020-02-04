@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django.http import HttpResponse
-from tree.models import Tree
+from tree.models import Node
 
 
 def index(request):
@@ -23,8 +23,8 @@ def tree_by_node_id(request, node_id):
 def get_tree_by_id(node_id):
     """Check and return model item"""
     try:
-        root_row = Tree.objects.get(id=node_id)
-    except Tree.DoesNotExist:
+        root_row = Node.objects.get(id=node_id)
+    except Node.DoesNotExist:
         return None  # node does not exist
 
     return get_child(root_row)
@@ -38,7 +38,7 @@ def get_full_tree():
 
 def get_child(parent):
     """Get parent subtree or node"""
-    children = Tree.objects.filter(parent=parent)
+    children = Node.objects.filter(parent=parent)
     if children.count() == 0:
         return {'name': parent.name, 'children': []}
     else:
@@ -51,7 +51,7 @@ def get_child(parent):
 
 def get_root():
     """Validate data structure and get root element"""
-    roots = Tree.objects.filter(parent=None)  # request all roots to verify the correctness of the structure.
+    roots = Node.objects.filter(parent=None)  # request all roots to verify the correctness of the structure.
     roots_count = roots.count()
     if roots_count > 1:
         raise Exception('Incorrect data structure, more then one roots in the tree')
