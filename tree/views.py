@@ -47,7 +47,7 @@ def get_child(parent_id, parent_name, child_tree_df):
     else:
         children_list = []
         for index, row in children_df.iterrows():
-            children_list.append(get_child(row['descendant__parent__parent_id'], row['descendant__name'], child_tree_df))
+            children_list.append(get_child(row['descendant__parent__parent_id'], row['descendant__name']))
 
         return {'name': parent_name, 'children': children_list}
 
