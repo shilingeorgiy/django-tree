@@ -12,7 +12,7 @@ python3.7 -m venv .env
 ```
 2. Set virtualenv
 ``` 
-. ./.env/bin/activate
+. .env/bin/activate
 ```
 3. Install requirements:
 ```
