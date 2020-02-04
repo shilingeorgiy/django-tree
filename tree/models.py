@@ -11,7 +11,7 @@ class Node(models.Model):
 
 
 class TreePath(models.Model):
-    ancestor = models.ForeignKey(Node, models.CASCADE, verbose_name='Предок', related_name='node_ancestor')
+    ancestor = models.ForeignKey(Node, models.CASCADE, verbose_name='Предок', related_name='node_ancestor', null=True)
     descendant = models.ForeignKey(Node, models.CASCADE, verbose_name='Потомок', related_name='node_descendant')
 
     def __str__(self):

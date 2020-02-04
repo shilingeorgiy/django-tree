@@ -1,7 +1,8 @@
 # Create your views here.
 
 from django.http import HttpResponse
-from tree.models import Node
+from tree.models import Node, TreePath
+import pandas as pd
 
 
 def index(request):
@@ -33,20 +34,22 @@ def get_tree_by_id(node_id):
 def get_full_tree():
     """Get all tree from root"""
     root = get_root()
-    return get_child(root)
+    child_tree_df = get_tree_by_node(root.id)
+    return get_child(root.id, child_tree_df)
 
 
-def get_child(parent):
+def get_child(parent_id, parent_name, child_tree_df):
     """Get parent subtree or node"""
-    children = Node.objects.filter(parent=parent)
-    if children.count() == 0:
-        return {'name': parent.name, 'children': []}
+    children_df = child_tree_df[child_tree_df.parent_id == parent_id]  # get all children for this parent
+
+    if children_df.count() == 0:
+        return {'name': parent_name, 'children': []}
     else:
         children_list = []
-        for child in children:
-            children_list.append(get_child(child))
+        for index, row in children_df.iterrows():
+            children_list.append(get_child(row['parent_id'], row['parent_name'], child_tree_df))
 
-        return {'name': parent.name, 'children': children_list}
+        return {'name': parent_name, 'children': children_list}
 
 
 def get_root():
@@ -59,3 +62,11 @@ def get_root():
         raise Exception('Incorrect data structure, no  one roots in the tree')
     else:
         return roots.first()
+
+
+def get_tree_by_node(node_id):
+    """Get pandas df childs tree by node"""
+    query_set_values = TreePath.objects.filter(ancestor__id=node_id).select_related('descendant').values()
+    df = pd.DataFrame(list(query_set_values))
+
+    return df
