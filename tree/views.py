@@ -35,12 +35,12 @@ def get_full_tree():
     """Get all tree from root"""
     root = get_root()
     child_tree_df = get_tree_by_node(root.id)
-    return get_child(root.id, child_tree_df)
+    return get_child(root.id, root.name, child_tree_df)
 
 
 def get_child(parent_id, parent_name, child_tree_df):
     """Get parent subtree or node"""
-    children_df = child_tree_df[child_tree_df.parent_id == parent_id]  # get all children for this parent
+    children_df = child_tree_df[child_tree_df.descendant__parent__parent_id == parent_id]  # get all children for this parent
 
     if children_df.count() == 0:
         return {'name': parent_name, 'children': []}
