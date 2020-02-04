@@ -47,7 +47,7 @@ def get_child(parent_id, parent_name, child_tree_df):
     else:
         children_list = []
         for index, row in children_df.iterrows():
-            children_list.append(get_child(row['parent_id'], row['parent_name'], child_tree_df))
+            children_list.append(get_child(row['descendant__parent__parent_id'], row['descendant__name'], child_tree_df))
 
         return {'name': parent_name, 'children': children_list}
 
@@ -66,9 +66,10 @@ def get_root():
 
 def get_tree_by_node(node_id):
     """Get pandas df childs tree by node"""
-    query_set_values = TreePath.objects.filter(ancestor__id=node_id).select_related('descendant').values()
+    query_set_values = TreePath.objects.filter(ancestor__id=node_id).\
+        select_related('descendant__name', 'descendant__id', 'descendant__parent__parent_id').values()
     # Join tables
-    df = pd.DataFrame(list(query_set_values))
-    # Create dataframe
+    df = pd.DataFrame(list(query_set_values))  # Create dataframe
+
 
     return df
