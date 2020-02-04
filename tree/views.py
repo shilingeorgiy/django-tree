@@ -67,6 +67,8 @@ def get_root():
 def get_tree_by_node(node_id):
     """Get pandas df childs tree by node"""
     query_set_values = TreePath.objects.filter(ancestor__id=node_id).select_related('descendant').values()
+    # Join tables
     df = pd.DataFrame(list(query_set_values))
+    # Create dataframe
 
     return df
