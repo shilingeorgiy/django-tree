@@ -40,14 +40,14 @@ def get_full_tree():
 
 def get_child(parent_id, parent_name, child_tree_df):
     """Get parent subtree or node"""
-    children_df = child_tree_df[child_tree_df.descendant__parent__parent_id == parent_id]  # get all children for this parent
+    children_df = child_tree_df[child_tree_df.parent_id == parent_id]  # get all children for this parent
 
     if children_df.count() == 0:
         return {'name': parent_name, 'children': []}
     else:
         children_list = []
         for index, row in children_df.iterrows():
-            children_list.append(get_child(row['descendant__parent__parent_id'], row['descendant__name']))
+            children_list.append(get_child(row['parent_id'], row['name']))
 
         return {'name': parent_name, 'children': children_list}
 
@@ -71,5 +71,23 @@ def get_tree_by_node(node_id):
     # Join tables
     df = pd.DataFrame(list(query_set_values))  # Create dataframe
 
+    return df
+
+
+def get_test_df():
+    """Get pandas df childs tree by node"""
+    query_set_values = TreePath.objects.filter(ancestor__id=1).\
+        select_related('descendant__name', 'descendant__id', 'descendant__parent__parent_id',
+                       'ancestor__parent__parent_id')\
+        .values('descendant__name', 'descendant__id', 'descendant__parent__parent_id', 'ancestor__parent__parent_id')
+    df = pd.DataFrame(columns=['node_id', 'name', 'parent_id'])
+
+    for el in query_set_values:
+        df = df.append({'node_id': el['descendant__id'],
+                        'name': el['descendant__name'],
+                        'parent_id': el['ancestor__parent__parent_id'],
+
+                        },
+                       ignore_index=True)
 
     return df
