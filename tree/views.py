@@ -86,7 +86,6 @@ def get_test_df():
         df = df.append({'node_id': el['descendant__id'],
                         'name': el['descendant__name'],
                         'parent_id': el['ancestor__parent__parent_id'],
-
                         },
                        ignore_index=True)
 
